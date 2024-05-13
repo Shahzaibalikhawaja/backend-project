@@ -9,7 +9,7 @@ import { ApiResponse } from "../utils/ApiResponse.js";
  //user ko register karna hai
 const registerUser =   asyncHandler( async (req, res) => {
 
-   
+    // Here's the algorithm
     //step 1: get user details from frontend
     //step 2: validation karni hogi, check user ne username empty to nahi de dya etc
     //step 3: check if user already exists in database : username and email should be unique 
@@ -35,8 +35,8 @@ const registerUser =   asyncHandler( async (req, res) => {
     }
 
     // 3
-    const existedUser = User.findOne({ //User can communicate with database on our behalf
-        $or: [ { username } , { email } , ]//AND gate aur OR gate wala OR operator hai, koi aik value bhi mili to returns true 
+    const existedUser = await User.findOne({ //User can communicate with database on our behalf
+        $or: [ { username } , { email } ]//AND gate aur OR gate wala OR operator hai, koi aik value bhi mili to returns true 
         
     })
     console.log("existedUser: ", existedUser);
@@ -45,13 +45,9 @@ const registerUser =   asyncHandler( async (req, res) => {
     }
 
     // 4
-    const avatarLocalPath = req.files?.avatar[0]?.path;
-    console.log("req.files: ")
-    console.log(req.files)
+    const avatarLocalPath = await req.files?.avatar[0]?.path;
 //localpath is liye kyun ke abhi local server pe hai cloudinary pe upload nahi kiya image multer ne
-    const coverImageLocalPath = req.files?.coverImage[0]?.path;
-    console.log("req.files: ")
-    console.log(req.files)
+    const coverImageLocalPath = await req.files?.coverImage[0]?.path;
 
     if (!avatarLocalPath) {
         throw new ApiError(400 , "Avatar file is required")
@@ -64,7 +60,7 @@ const registerUser =   asyncHandler( async (req, res) => {
     // aik bar check karo avatar upload hwa k nahi because its required field
     if (!avatar) {
         throw new ApiError(400, "Avatar not uploaded")
-        }
+    }
     
     //6 
     const user = await User.create({

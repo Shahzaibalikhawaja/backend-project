@@ -55,12 +55,12 @@ const userSchema = new Schema(
 // pre = before
 // post = after
 // before saving, we encrypt using hash method, hash requires two things
-// pehla k encrpypt kya karna hai
+// pehla k encrypt kya karna hai
 // dursa kitne round ki encryption lagani hai
 userSchema.pre("save", async function (next) {
     if (!this.isModified("password")) return next(); //agar modify ni hwa password to direct return
 
-    this.password = bcrypt.hash(this.password, 10);
+    this.password = await bcrypt.hash(this.password, 10);
     next();
 });
 
@@ -97,3 +97,4 @@ userSchema.methods.generateRefreshToken = function () {
 };
 
 export const User = mongoose.model("User", userSchema);
+// yeh User database se direct contact kar sakta hai because it is made with mongoose.

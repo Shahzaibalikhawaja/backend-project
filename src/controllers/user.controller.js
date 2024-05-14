@@ -25,7 +25,7 @@ const registerUser =   asyncHandler( async (req, res) => {
 
     // 1
     const {fullName, email , username, password} = req.body
-    console.log("Email yeh agyi hai: " , email);
+    // console.log("Email yeh agyi hai: " , email);
     
     // 2
     if ( // check k koi empty input to nahi agya, agar koi empty hai to error bhejo
@@ -39,15 +39,22 @@ const registerUser =   asyncHandler( async (req, res) => {
         $or: [ { username } , { email } ]//AND gate aur OR gate wala OR operator hai, koi aik value bhi mili to returns true 
         
     })
-    console.log("existedUser: ", existedUser);
+    // console.log("existedUser: ", existedUser);
     if (existedUser) { // If koi user esa exist karta hai to error bhejdo
         throw new ApiError(409 , "Error: Username/Email already used")
     }
 
     // 4
     const avatarLocalPath = await req.files?.avatar[0]?.path;
-//localpath is liye kyun ke abhi local server pe hai cloudinary pe upload nahi kiya image multer ne
-    const coverImageLocalPath = await req.files?.coverImage[0]?.path;
+// //localpath is liye kyun ke abhi local server pe hai cloudinary pe upload nahi kiya image multer ne
+//     const coverImageLocalPath = await req.files?.coverImage[0]?.path;
+
+    let coverImageLocalPath;
+    if (req.files && Array.isArray(req.files.coverImage) && req.files.coverImage.Length > 0) {
+        coverImageLocalPath = req.files.coverImage[0].path
+    }
+
+    
 
     if (!avatarLocalPath) {
         throw new ApiError(400 , "Avatar file is required")

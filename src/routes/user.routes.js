@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { loginUser, registerUser , logoutUser} from "../controllers/user.controller.js";
+import { loginUser, registerUser , logoutUser, refreshAccesToken} from "../controllers/user.controller.js";
 import { upload } from "../middlewares/multer.middleware.js";
 import { verifyJWT } from "../middlewares/auth.middleware.js";
 
@@ -33,5 +33,8 @@ router.route("/login").post(
  //secured routes
 router.route("/logout").post(verifyJWT, logoutUser) 
 //.post(logoutUser) me verifyJWT middleware laga diya hai from auth.middleware.js
+
+
+router.route("/refresh-token").post(refreshAccesToken)
 
 export default router

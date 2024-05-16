@@ -67,9 +67,6 @@ userSchema.pre("save", async function (next) {
 //custom method banaya hai
 userSchema.methods.isPasswordCorrectBhai = async function (password) {
     return await bcrypt.compare(password, this.password);
-
-    console.log("Comparing Password : ", password, " with passwordinDB : ", this.password);
-
 };
 // do aur custom method banaenge, jwt (jsonWebToken) se do token generate karaenge
 userSchema.methods.generateAccessToken = function () {

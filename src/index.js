@@ -1,40 +1,28 @@
 // require('dotenv').config({path: './env'})
 
-import dotenv from "dotenv"
+import dotenv from "dotenv";
 import mongoose from "mongoose";
-import {DB_NAME} from "./constants.js";
+import { DB_NAME } from "./constants.js";
 import connectDB from "./db/index.js";
-import {app} from "./app.js"
+import { app } from "./app.js";
 
 dotenv.config({
-    path: './.env'
-})
-
+    path: "./.env",
+});
 
 connectDB()
-.then(()=>{
-    app.on("Error" , (error)=>{
-        console.log("ERROR: ", error);
-        throw error
+    .then(() => {
+        app.on("Error", (error) => {
+            console.log("ERROR: ", error);
+            throw error;
+        });
+        app.listen(process.env.PORT || 8000, () => {
+            console.log(`Server is running at port: ${process.env.PORT}`);
+        });
     })
-    app.listen(process.env.PORT || 8000, ()=>{
-        console.log(`Server is running at port: ${process.env.PORT}`);
-    })
-})
-.catch((err)=>{
-    console.log("MONGO db connection failed !!", err);
-})
-
-
-
-
-
-
-
-
-
-
-
+    .catch((err) => {
+        console.log("MONGO db connection failed !!", err);
+    });
 
 /*
 // method 1 yeh hai, to connect Database Mongodb, isko abhi comment kar rha

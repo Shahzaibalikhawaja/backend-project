@@ -4,6 +4,13 @@ import {
     registerUser,
     logoutUser,
     refreshAccesToken,
+    changeCurrentPassword,
+    getCurrentUser,
+    updateAccountDetails,
+    updateUserAvatar,
+    updateUserCoverImage,
+    getUserChannelProfile,
+    getWatchHistory,
 } from "../controllers/user.controller.js";
 import { upload } from "../middlewares/multer.middleware.js";
 import { verifyJWT } from "../middlewares/auth.middleware.js";
@@ -38,5 +45,25 @@ router.route("/logout").post(verifyJWT, logoutUser);
 //.post(logoutUser) me verifyJWT middleware laga diya hai from auth.middleware.js
 
 router.route("/refresh-token").post(refreshAccesToken);
+
+router.route("/change-password").post(verifyJWT, changeCurrentPassword);
+// again verifyJWT so that only people who are logged in can access this
+
+router.route("/current-user").get(getCurrentUser);
+
+router.route("/update-account").patch(verifyJWT, updateAccountDetails);
+//patch so that the whole is not updated
+
+router
+    .route("/avatar")
+    .patch(verifyJWT, upload.single("avatar"), updateUserAvatar);
+
+router
+    .route("/cover-image")
+    .patch(verifyJWT, upload.single("coverImage"), updateUserCoverImage);
+
+router.route("/c/:username").get(verifyJWT, getUserChannelProfile);
+
+router.route("/history").get(verifyJWT, getWatchHistory);
 
 export default router;

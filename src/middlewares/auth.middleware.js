@@ -5,8 +5,7 @@ import { ApiError } from "../utils/ApiError.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { User } from "../models/user.model.js";
 
-export const verifyJWT = asyncHandler(async (req, _, next) => {
-    // req k baad res unused tha to uski jaga _ laga lo
+export const verifyJWT = asyncHandler(async (req, res, next) => {
 
     try {
         const token =

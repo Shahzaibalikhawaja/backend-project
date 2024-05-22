@@ -74,6 +74,10 @@ const registerUser = asyncHandler(async (req, res) => {
     const avatarLocalPath = await req.files?.avatar[0]?.path;
     // //localpath is liye kyun ke abhi local server pe hai cloudinary pe upload nahi kiya image multer ne
     //     const coverImageLocalPath = await req.files?.coverImage[0]?.path;
+    if (!avatarLocalPath) {
+        throw new ApiError(400, "Avatar file is required");
+    }
+
 
     let coverImageLocalPath;
     if (
@@ -84,9 +88,7 @@ const registerUser = asyncHandler(async (req, res) => {
         coverImageLocalPath = req.files.coverImage[0].path;
     }
 
-    if (!avatarLocalPath) {
-        throw new ApiError(400, "Avatar file is required");
-    }
+
 
     // 5
     const avatar = await uploadOnCloudinary(avatarLocalPath); // await because upload hone me time lagega
@@ -229,11 +231,11 @@ const refreshAccesToken = asyncHandler(async (req, res) => {
         req.cookies.refreshToken || req.body.refreshToken;
 
     if (!incomingRefreshToken) {
-        throw new ApiError(401, "Unauthorized Access( token ghalat hai apka)");
+        throw new ApiError(401, "Unauthorized request( token ghalat hai apka)");
     }
     try {
         //token verify karate hain
-        const decodedToken = verify.jwt(
+        const decodedToken = jwt.verify(
             incomingRefreshToken,
             process.env.REFRESH_TOKEN_SECRET
         );
@@ -299,7 +301,7 @@ const changeCurrentPassword = asyncHandler(async (req, res) => {
 });
 
 const getCurrentUser = asyncHandler(async (req, res) => {
-    res.status(200).json(200, req.user, "Current User fetched Successfully");
+    res.status(200).json(200, req.user?._id, "Current User fetched Successfully");
 });
 
 const updateAccountDetails = asyncHandler(async (req, res) => {
